@@ -1,0 +1,24 @@
+services:
+  wiredoor:
+    image: ghcr.io/wiredoor/wiredoor:latest
+    container_name: wiredoor
+    cap_add:
+      - NET_ADMIN
+    env_file:
+      - .env
+    restart: unless-stopped
+    volumes:
+      - wiredoor-data:/data
+      - wiredoor-certbot:/etc/letsencrypt
+      # - ./wiredoor-logs:/var/log/nginx        # <--- Optional: Mount for collecting NGINX logs
+    ports:
+      - 80:80/tcp
+      - 443:443/tcp
+      - 51820:51820/udp                        # Must match with VPN_PORT in .env
+      - 32760-32767                            # Must match with TCP_SERVICES_PORT_RANGE in .env
+    sysctls:
+      - net.ipv4.ip_forward=1
+
+volumes:
+  wiredoor-data:
+  wiredoor-certbot:
