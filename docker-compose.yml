@@ -10,7 +10,7 @@ services:
     volumes:
       - wiredoor-data:/data
       - wiredoor-certbot:/etc/letsencrypt
-      # - ./wiredoor-logs:/var/log/nginx        # <--- Optional: Mount for collecting NGINX logs
+      - wiredoor-logs:/var/log/nginx           # <--- Optional: Mount for collecting NGINX logs
     ports:
       - 80:80/tcp
       - 443:443/tcp
@@ -21,6 +21,29 @@ services:
     sysctls:
       - net.ipv4.ip_forward=1
 
+  crowdsec:
+    image: crowdsecurity/crowdsec:latest
+    container_name: crowdsec
+    restart: unless-stopped
+    volumes:
+      - crowdsec-data:/var/lib/crowdsec/data/
+      - wiredoor-logs:/var/log/nginx:ro
+      - ./extras/crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
+    environment:
+      COLLECTIONS: "crowdsecurity/nginx"
+      TZ: "America/New_York"
+      GID: "${GID-1000}"
+    ports:
+      - "127.0.0.1:8080:8080"
+    healthcheck:
+      test: ["CMD", "cscli", "lapi", "status"]
+      interval: 15s
+      timeout: 10s
+      retries: 4
+      start_period: 30s
+
 volumes:
   wiredoor-data:
   wiredoor-certbot:
+  wiredoor-logs:
+  crowdsec-data:
