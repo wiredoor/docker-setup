@@ -20,6 +20,8 @@ services:
       - 1.1.1.1                                # Preferred DNS for domain resolution
     sysctls:
       - net.ipv4.ip_forward=1
+    networks:
+      - wiredoor
 
   crowdsec:
     image: crowdsecurity/crowdsec:latest
@@ -41,9 +43,59 @@ services:
       timeout: 10s
       retries: 4
       start_period: 30s
+    networks:
+      - wiredoor
+
+  grafana:
+    image: grafana/grafana:11.6.1
+    container_name: grafana
+    restart: unless-stopped
+    # port:
+    #   - 127.0.0.1:3000:3000
+    environment:
+      # GF_SERVER_ROOT_URL: https://grafana.domain.com
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER?}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD?}
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./extras/grafana/provisioning:/etc/grafana/provisioning/
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      start_period: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - wiredoor
+
+  prometheus:
+    image: quay.io/prometheus/prometheus:v3.3.1
+    container_name: prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=7d'
+    # ports:
+    #   - 127.0.0.1:9090:9090
+    volumes:
+      - ./extras/prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:9090/-/ready"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - wiredoor
 
 volumes:
   wiredoor-data:
   wiredoor-certbot:
   wiredoor-logs:
   crowdsec-data:
+  grafana-data:
+  prometheus-data:
+
+networks:
+  wiredoor:
