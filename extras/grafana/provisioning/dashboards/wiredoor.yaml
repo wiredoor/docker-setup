@@ -19,6 +19,6 @@ providers:
     allowUiUpdates: true
     options:
       # <string, required> path to dashboard files on disk. Required when using the 'file' type
-      path: /etc/provisioning/dashboards/wiredoor
+      path: /etc/grafana/provisioning/wiredoor
       # <bool> use folder names from filesystem to create folders in Grafana
       foldersFromFilesStructure: true
