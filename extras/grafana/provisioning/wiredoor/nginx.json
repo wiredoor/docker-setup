@@ -769,7 +769,9 @@
   "preload": false,
   "refresh": "10s",
   "schemaVersion": 41,
-  "tags": [],
+  "tags": [
+    "Wiredoor"
+  ],
   "templating": {
     "list": []
   },
