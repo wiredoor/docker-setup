@@ -54,8 +54,8 @@ services:
     #   - 127.0.0.1:3000:3000
     environment:
       # GF_SERVER_ROOT_URL: https://grafana.domain.com
-      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER?}
-      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD?}
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-$ADMIN_PASSWORD}
     volumes:
       - grafana-data:/var/lib/grafana
       - ./extras/grafana/provisioning:/etc/grafana/provisioning/
