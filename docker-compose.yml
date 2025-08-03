@@ -1,6 +1,6 @@
 services:
   wiredoor:
-    image: ghcr.io/wiredoor/wiredoor:latest
+    image: wiredoor/wiredoor:latest
     container_name: wiredoor
     cap_add:
       - NET_ADMIN
