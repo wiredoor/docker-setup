@@ -14,6 +14,7 @@ services:
     ports:
       - 80:80/tcp
       - 443:443/tcp
+      - 443:443/udp                            # HTTP/3 support
       - 51820:51820/udp                        # Must match with VPN_PORT in .env
       - 32760-32767:32760-32767                # Must match with TCP_SERVICES_PORT_RANGE in .env
     dns:
