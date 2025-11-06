@@ -33,7 +33,7 @@ services:
       - crowdsec-data:/var/lib/crowdsec/data/
       - wiredoor-logs:/var/log/nginx:ro
       - ./extras/crowdsec/acquis.d:/etc/crowdsec/acquis.d:ro
-      - ./extras/crowdsec/online_api_credentials.yaml:/etc/crowdsec/online_api_credentials.yaml:ro
+      # - ./extras/crowdsec/online_api_credentials.yaml:/etc/crowdsec/online_api_credentials.yaml:ro
     environment:
       COLLECTIONS: "crowdsecurity/nginx"
       TZ: "America/New_York"
