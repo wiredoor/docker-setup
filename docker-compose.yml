@@ -50,7 +50,7 @@ services:
       - wiredoor
 
   grafana:
-    image: grafana/grafana:11.6.1
+    image: grafana/grafana:main
     container_name: grafana
     restart: unless-stopped
     # port:
@@ -72,7 +72,7 @@ services:
       - wiredoor
 
   prometheus:
-    image: quay.io/prometheus/prometheus:v3.3.1
+    image: quay.io/prometheus/prometheus:latest
     container_name: prometheus
     restart: unless-stopped
     command:
